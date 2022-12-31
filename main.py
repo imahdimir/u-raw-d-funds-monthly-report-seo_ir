@@ -3,12 +3,11 @@
     """
 
 import requests
-from githubdata import GithubData
-
+from githubdata import GitHubDataRepo as GHDR
 
 class RepoUrls :
-    trg = 'https://github.com/imahdimir/raw-d-funds-monthly-report-seo_ir'
-    cur = 'https://github.com/imahdimir/u-raw-d-funds-monthly-report-seo_ir'
+    cur = 'https://github.com/imahdimir/u-rd0-funds-monthly-report-seo_ir'
+    trg = 'https://github.com/imahdimir/rd0-funds-monthly-report-seo_ir'
 
 ru = RepoUrls()
 
@@ -34,60 +33,60 @@ def main() :
 
     ##
 
-    # 1. Get the data from the website
     zurs = []
     for ky , vl in ZipFilesUrls.__dict__.items() :
         if not ky.startswith('__') :
-            zurs.append(
-                    {
-                            ky : vl
-                            }
-                    )
+            zurs.append({
+                    ky : vl
+                    })
 
     ##
     zurs = zurs[-2 :]
+
     ##
-    rp_trg = GithubData(ru.trg)
-    rp_trg.overwriting_clone()
-    ##
+    rp_trg = GHDR(ru.trg)
+    rp_trg.clone_overwrite()
+
     data_dir = rp_trg.local_path
+
     ##
     for el in zurs :
+
         print(list(el.keys())[0])
+
         r = requests.get(list(el.values())[0] , verify = False)
+
         print(r.status_code)
         print(r.headers)
+
         if r.status_code == 200 :
             fp = data_dir / str(list(el.keys())[0] + '.rar')
             with open(fp , 'wb') as f :
                 f.write(r.content)
+                print('Downloaded:' , fp)
+
     ##
     msg = 'udated by: '
     msg += ru.cur
-    ##
+
     rp_trg.commit_and_push(msg)
+
     ##
     rp_trg.rmdir()
 
-
-    ##
-
 ##
+
+
 if __name__ == "__main__" :
     main()
+    print()
 
 ##
+
 # noinspection PyUnreachableCode
 if False :
     pass
-    ##
-    u = 'https://github.com/imahdimir/u-d-fund-nav'
-    gd = GithubData(u)
-    gd.overwriting_clone()
-    ##
-    gd.commit_and_push('tset')
-
 
     ##
 
-##
+    ##
